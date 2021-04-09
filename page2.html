@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+  <link rel="stylesheet" href="css/bootstrap.css">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="stylesheet" href="css/media.css">
+
+  <title>jquery</title>
+</head>
+<body>
+
+<!-- five items -->
+
+
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6">
+      <ul id="menu">
+        <li class="ui-widget-header"><div>Category 1</div></li>
+        <li><div>Option 1</div></li>
+        <li><div>Option 2</div></li>
+        <li><div>Option 3</div></li>
+        <li class="ui-widget-header"><div>Category 2</div></li>
+        <li><div>Option 4</div></li>
+        <li><div>Option 5</div></li>
+        <li><div>Option 6</div></li>
+      </ul>
+    </div>
+    <div class="col-lg-6">
+      <div id="dialog" title="File Download">
+        <div class="progress-label">Starting download...</div>
+        <div id="progressbar"></div>
+      </div>
+      <button id="downloadButton">Start Download</button>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6">
+  
+      <div class="demo">
+ 
+<form action="#">
+ 
+  <div id="circle"></div>
+ 
+  <fieldset>
+    <label for="radius">Circle radius</label>
+    <select name="radius" id="radius">
+      <option value="50">50px</option>
+      <option value="100">100px</option>
+      <option value="150" selected="selected">150px</option>
+      <option value="200">200px</option>
+      <option value="250">250px</option>
+    </select>
+ 
+    <label for="color">Circle color</label>
+    <select name="color" id="color">
+      <option value="black">Black</option>
+      <option value="red">Red</option>
+      <option value="yellow" selected="selected">Yellow</option>
+      <option value="blue">Blue</option>
+      <option value="green">Green</option>
+    </select>
+  </fieldset>
+ 
+</form>
+
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <p>
+      <label for="amount">Donation amount ($50 increments):</label>
+      <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+    </p>
+
+    <div id="slider"></div>
+  </div>
+</div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6">
+      <p>
+  <label for="spinner">Amount to donate:</label>
+  <input id="spinner" name="spinner" value="5">
+</p>
+ 
+<p>
+  <label for="currency">Currency to donate</label>
+  <select id="currency" name="currency">
+    <option value="en-US">US $</option>
+    <option value="de-DE">EUR &#x20AC;</option>
+    <option value="ja-JP">YEN &#xA5;</option>
+  </select>
+</p>
+    </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      
+      <a href="page3.html" class="btn btn-primary">Next</a>
+    </div>
+  </div>
+</div>
+    <!-- ten items -->
+
+
+    
+
+
+
+
+
+<!-- js link-->
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/script.js"></script>
+<script>
+  // menu
+
+  $( "#menu" ).menu({
+      items: "> :not(.ui-widget-header)"
+    });
+   // prograssbar
+
+         var progressTimer,
+      progressbar = $( "#progressbar" ),
+      progressLabel = $( ".progress-label" ),
+      dialogButtons = [{
+        text: "Cancel Download",
+        click: closeDownload
+      }],
+      dialog = $( "#dialog" ).dialog({
+        autoOpen: false,
+        closeOnEscape: false,
+        resizable: false,
+        buttons: dialogButtons,
+        open: function() {
+          progressTimer = setTimeout( progress, 2000 );
+        },
+        beforeClose: function() {
+          downloadButton.button( "option", {
+            disabled: false,
+            label: "Start Download"
+          });
+        }
+      }),
+      downloadButton = $( "#downloadButton" )
+        .button()
+        .on( "click", function() {
+          $( this ).button( "option", {
+            disabled: true,
+            label: "Downloading..."
+          });
+          dialog.dialog( "open" );
+        });
+ 
+    progressbar.progressbar({
+      value: false,
+      change: function() {
+        progressLabel.text( "Current Progress: " + progressbar.progressbar( "value" ) + "%" );
+      },
+      complete: function() {
+        progressLabel.text( "Complete!" );
+        dialog.dialog( "option", "buttons", [{
+          text: "Close",
+          click: closeDownload
+        }]);
+        $(".ui-dialog button").last().trigger( "focus" );
+      }
+    });
+ 
+    function progress() {
+      var val = progressbar.progressbar( "value" ) || 0;
+ 
+      progressbar.progressbar( "value", val + Math.floor( Math.random() * 3 ) );
+ 
+      if ( val <= 99 ) {
+        progressTimer = setTimeout( progress, 50 );
+      }
+    }
+ 
+    function closeDownload() {
+      clearTimeout( progressTimer );
+      dialog
+        .dialog( "option", "buttons", dialogButtons )
+        .dialog( "close" );
+      progressbar.progressbar( "value", false );
+      progressLabel
+        .text( "Starting download..." );
+      downloadButton.trigger( "focus" );
+    }
+      // selectmenu
+
+      var circle = $( "#circle" );
+ 
+    $( "#radius" ).selectmenu({
+      change: function( event, data ) {
+        circle.css({
+          width: data.item.value,
+          height: data.item.value
+        });
+      }
+     });
+ 
+    $( "#color" ).selectmenu({
+       change: function( event, data ) {
+         circle.css( "background", data.item.value );
+       }
+     });
+   // slider
+
+     $( "#slider" ).slider({
+      value:100,
+      min: 0,
+      max: 500,
+      step: 50,
+      slide: function( event, ui ) {
+        $( "#amount" ).val( "$" + ui.value );
+      }
+    });
+    $( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
+
+    // download
+
+    var progressTimer,
+      progressbar = $( "#progressbar" ),
+      progressLabel = $( ".progress-label" ),
+      dialogButtons = [{
+        text: "Cancel Download",
+        click: closeDownload
+      }],
+      dialog = $( "#dialog" ).dialog({
+        autoOpen: false,
+        closeOnEscape: false,
+        resizable: false,
+        buttons: dialogButtons,
+        open: function() {
+          progressTimer = setTimeout( progress, 2000 );
+        },
+        beforeClose: function() {
+          downloadButton.button( "option", {
+            disabled: false,
+            label: "Start Download"
+          });
+        }
+      }),
+      downloadButton = $( "#downloadButton" )
+        .button()
+        .on( "click", function() {
+          $( this ).button( "option", {
+            disabled: true,
+            label: "Downloading..."
+          });
+          dialog.dialog( "open" );
+        });
+ 
+    progressbar.progressbar({
+      value: false,
+      change: function() {
+        progressLabel.text( "Current Progress: " + progressbar.progressbar( "value" ) + "%" );
+      },
+      complete: function() {
+        progressLabel.text( "Complete!" );
+        dialog.dialog( "option", "buttons", [{
+          text: "Close",
+          click: closeDownload
+        }]);
+        $(".ui-dialog button").last().trigger( "focus" );
+      }
+    });
+ 
+    function progress() {
+      var val = progressbar.progressbar( "value" ) || 0;
+ 
+      progressbar.progressbar( "value", val + Math.floor( Math.random() * 3 ) );
+ 
+      if ( val <= 99 ) {
+        progressTimer = setTimeout( progress, 50 );
+      }
+    }
+ 
+    function closeDownload() {
+      clearTimeout( progressTimer );
+      dialog
+        .dialog( "option", "buttons", dialogButtons )
+        .dialog( "close" );
+      progressbar.progressbar( "value", false );
+      progressLabel
+        .text( "Starting download..." );
+      downloadButton.trigger( "focus" );
+    }
+    // spinner
+
+     $( "#spinner" ).spinner({
+      min: 5,
+      max: 2500,
+      step: 25,
+      start: 1000,
+      numberFormat: "C"
+    });
+    
+    
+</script>
+
+</body>
+</html>
